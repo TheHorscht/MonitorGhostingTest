@@ -36,7 +36,9 @@
         <label>
         Font weight:
         <select v-model="fontWeight">
-          <option v-for="fontWeight in fontWeights" :key="fontWeight" :value="fontWeight">{{ fontWeight }}</option>
+          <option v-for="fontWeight in fontWeights" :key="fontWeight" :value="fontWeight">
+            {{ fontWeight }}
+          </option>
         </select>
         </label>
       </div>
@@ -51,40 +53,44 @@
 </template>
 
 <script>
-import { Chrome as chromeColorpicker } from "vue-color";
+import { Chrome as chromeColorpicker } from 'vue-color';
 
 let c;
-let w, h = 100;
+let w;
+let h = 100;
 let textWidth = null;
-let fonts = [
-  "Times New Roman",
-  "Arial",
+const fonts = [
+  'Times New Roman',
+  'Arial',
 ];
-let fontWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+const fontWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
-    chromeColorpicker 
+    chromeColorpicker,
   },
   data: () => ({
     font: fonts[0],
-    fonts, fontWeights,
+    fonts,
+    fontWeights,
     fontSize: 20,
     fontWeight: fontWeights[4],
-    text: "gg",
-    userInput: "",
-    color: { hex:"#000" },
-    bgcolor: { hex:"#FFF" },
+    text: 'gg',
+    userInput: '',
+    color: { hex: '#000' },
+    bgcolor: { hex: '#FFF' },
     x: 0,
     textPadding: 40,
     speed: 2,
     moving: true,
   }),
   mounted() {
-    c = this.$refs.canvas.getContext("2d");
-    this.$refs.canvas.width = w = window.innerWidth;
-    this.$refs.canvas.height = h = parseInt(this.fontSize) + 20;
+    c = this.$refs.canvas.getContext('2d');
+    w = window.innerWidth;
+    this.$refs.canvas.width = w;
+    h = parseInt(this.fontSize, 10) + 20;
+    this.$refs.canvas.height = h;
     this.recalculateTextSize();
     this.generateNewText();
     window.requestAnimationFrame(this.draw);
@@ -95,7 +101,8 @@ export default {
     },
     fontSize() {
       this.recalculateTextSize();
-      this.$refs.canvas.height = h = parseInt(this.fontSize, 10) + 20;
+      h = parseInt(this.fontSize, 10) + 20;
+      this.$refs.canvas.height = h;
     },
     fontWeight() {
       this.recalculateTextSize();
@@ -104,7 +111,7 @@ export default {
   computed: {
     fontStyle() {
       return `${this.fontWeight} normal ${this.fontSize}px ${this.font}`;
-    }
+    },
   },
   methods: {
     draw() {
@@ -112,35 +119,35 @@ export default {
       c.fillRect(0, 0, w, h);
       c.fillStyle = this.color.hex;
       c.font = this.fontStyle;
-      c.textBaseline = "top";
-      let blockWidth = textWidth + this.textPadding;
-      let fitCount = Math.ceil(window.innerWidth / blockWidth);
-      for(let i = 0; i < fitCount + 1; i++) {
+      c.textBaseline = 'top';
+      const blockWidth = textWidth + this.textPadding;
+      const fitCount = Math.ceil(window.innerWidth / blockWidth);
+      for (let i = 0; i < fitCount + 1; i += 1) {
         c.fillText(this.text, this.x + (i * blockWidth), 10);
       }
-      if(this.moving) {
+      if (this.moving) {
         this.x += parseFloat(this.speed);
       }
-      if(this.x + blockWidth >= blockWidth) {
+      if (this.x + blockWidth >= blockWidth) {
         this.x -= blockWidth;
       }
       window.requestAnimationFrame(this.draw);
     },
     checkUserInput() {
-      if(this.userInput === this.text) {
+      if (this.userInput === this.text) {
         this.nextLevel();
       }
     },
     nextLevel() {
       this.speed += 2;
       this.generateNewText();
-      this.userInput = "";
+      this.userInput = '';
     },
     generateNewText() {
-      let characters = "abcdefghijklmnopqrstuvwxyz";
-      let text = Array(20).fill(0)
-                 .map(() => characters[Math.floor(Math.random() * characters.length)])
-                 .join("");
+      const characters = 'abcdefghijklmnopqrstuvwxyz';
+      const text = Array(20).fill(0)
+        .map(() => characters[Math.floor(Math.random() * characters.length)])
+        .join('');
       this.text = text;
       this.recalculateTextSize();
       this.x = -(textWidth + this.textPadding);
@@ -154,8 +161,8 @@ export default {
     },
     stop() {
       this.moving = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
