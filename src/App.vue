@@ -170,14 +170,6 @@ body {
   width: 600px;
   margin: 0 auto;
 }
-label {
-/*   display: grid;
-  text-align: right;
-  grid-template-columns: 80px auto;
-  grid-gap: 10px;
-  width: 300px;
-  margin-bottom: 10px; */
-}
 canvas {
   position: absolute;
   top: 0px;
