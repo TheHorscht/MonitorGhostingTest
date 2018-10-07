@@ -1,6 +1,6 @@
 # Monitor Ghosting Test
 
-> A Vue.js project
+> A Vue.js project, created on codesandbox.io
 
 ## Build Setup
 
