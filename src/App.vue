@@ -98,7 +98,6 @@ export default {
       this.$refs.canvas.height = h = parseInt(this.fontSize, 10) + 20;
     },
     fontWeight() {
-      console.log("fontWeight set to " + this.fontWeight);
       this.recalculateTextSize();
     },
   },
@@ -202,7 +201,6 @@ input[type=button] {
   margin: 0 auto;
   margin-top: 20px;
   padding: 10px;
-  //border: 1px solid black;
 }
 .font-config {
   margin: 20px 0px;
