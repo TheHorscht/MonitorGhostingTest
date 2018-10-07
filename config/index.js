@@ -8,7 +8,7 @@ module.exports = {
   dev: {
 
     // Paths
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'MonitorGhostingTest/static',
     assetsPublicPath: '/MonitorGhostingTest',
     proxyTable: {},
 
@@ -50,7 +50,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/MonitorGhostingTest',
 
     /**
      * Source Maps
