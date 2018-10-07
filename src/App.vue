@@ -54,6 +54,7 @@
 
 <script>
 import { Chrome as chromeColorpicker } from 'vue-color';
+import WebFont from 'webfontloader';
 
 let c;
 let w;
@@ -63,6 +64,24 @@ const fonts = [
   'Times New Roman',
   'Arial',
 ];
+WebFont.load({
+  classes: false,
+  google: {
+    families: [
+      'Cormorant Garamond:300,400,700',
+      'Crimson Text:400,700',
+      'Indie Flower',
+      'Open Sans Condensed:300,300i,700',
+    ],
+  },
+  fontactive(familyName, fvd) {
+    console.log(familyName, fvd);
+    if (!fonts.includes(familyName)) {
+      fonts.push(familyName);
+    }
+  },
+});
+
 const fontWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
 export default {
