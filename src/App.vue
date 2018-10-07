@@ -26,7 +26,7 @@
         <label>
         Font:
         <select v-model="font">
-          <option v-for="font in fonts" :key="font" :value="font">{{ font }}</option>
+          <option v-for="(font, key) in fonts" :key="key" :value="key">{{ key }}</option>
         </select>
         </label>
         <label>
@@ -35,9 +35,10 @@
         </label>
         <label>
         Font weight:
-        <select v-model="fontWeight">
-          <option v-for="fontWeight in fontWeights" :key="fontWeight" :value="fontWeight">
-            {{ fontWeight }}
+        <select v-model="fontVariation">
+          <option v-for="variation in fonts[font].variations"
+                  :key="variation.readable" :value="variation">
+            {{ variation.readable }}
           </option>
         </select>
         </label>
@@ -60,29 +61,50 @@ let c;
 let w;
 let h = 100;
 let textWidth = null;
-const fonts = [
-  'Times New Roman',
-  'Arial',
-];
-WebFont.load({
-  classes: false,
-  google: {
-    families: [
-      'Cormorant Garamond:300,400,700',
-      'Crimson Text:400,700',
-      'Indie Flower',
-      'Open Sans Condensed:300,300i,700',
+
+const fontVariations = {
+  i: {
+    css: 'italic',
+    readable: 'Italic',
+  },
+  n: {
+    css: 'normal',
+    readable: 'Normal',
+  },
+  o: {
+    css: 'oblique',
+    readable: 'Oblique',
+  },
+};
+
+function DecodeFVD(fvd) {
+  if (!/^[ino]+\d$/.test(fvd)) {
+    throw Error(`FVD ${fvd} has the wrong format.`);
+  } else {
+    const variant = fvd.substring(0, 1);
+    const weight = fvd.substring(1);
+    return {
+      readable: `${fontVariations[variant].readable} ${weight}00`,
+      css: `${weight}00 ${fontVariations[variant].css}`,
+      fvd,
+    };
+  }
+}
+
+const fonts = {
+  'Times New Roman': {
+    variations: [
+      DecodeFVD('n4'),
+      DecodeFVD('n7'),
     ],
   },
-  fontactive(familyName, fvd) {
-    console.log(familyName, fvd);
-    if (!fonts.includes(familyName)) {
-      fonts.push(familyName);
-    }
+  Arial: {
+    variations: [
+      DecodeFVD('n4'),
+      DecodeFVD('n7'),
+    ],
   },
-});
-
-const fontWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+};
 
 export default {
   name: 'App',
@@ -90,12 +112,11 @@ export default {
     chromeColorpicker,
   },
   data: () => ({
-    font: fonts[0],
+    font: 'Times New Roman',
     fonts,
-    fontWeights,
     fontSize: 20,
-    fontWeight: fontWeights[4],
-    text: 'gg',
+    fontVariation: DecodeFVD('n4'),
+    text: '',
     userInput: '',
     color: { hex: '#000' },
     bgcolor: { hex: '#FFF' },
@@ -110,12 +131,38 @@ export default {
     this.$refs.canvas.width = w;
     h = parseInt(this.fontSize, 10) + 20;
     this.$refs.canvas.height = h;
+
+    WebFont.load({
+      classes: false,
+      google: {
+        families: [
+          'Cormorant Garamond:300,400,700',
+          'Crimson Text:400,700',
+          'Indie Flower',
+          'Open Sans Condensed:300,300i,700',
+        ],
+      },
+      fontactive: (familyName, fvd) => {
+        const decodedFVD = DecodeFVD(fvd);
+        if (this.fonts[familyName] === undefined) {
+          this.$set(this.fonts, familyName, {
+            variations: [decodedFVD],
+          });
+        } else {
+          this.fonts[familyName].variations.push(decodedFVD);
+        }
+      },
+    });
+
     this.recalculateTextSize();
     this.generateNewText();
     window.requestAnimationFrame(this.draw);
   },
   watch: {
     font() {
+      if (!fonts[this.font].variations.find(fv => fv.fvd === this.fontVariation.fvd)) {
+        this.fontVariation = fonts[this.font].variations[0];
+      }
       this.recalculateTextSize();
     },
     fontSize() {
@@ -123,13 +170,13 @@ export default {
       h = parseInt(this.fontSize, 10) + 20;
       this.$refs.canvas.height = h;
     },
-    fontWeight() {
+    fontVariation() {
       this.recalculateTextSize();
     },
   },
   computed: {
     fontStyle() {
-      return `${this.fontWeight} normal ${this.fontSize}px ${this.font}`;
+      return `${this.fontVariation.css} ${this.fontSize}px ${this.font}`;
     },
   },
   methods: {
