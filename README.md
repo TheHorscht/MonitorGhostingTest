@@ -1,6 +1,6 @@
 # Monitor Ghosting Test
 
-> A Vue.js project, created on codesandbox.io
+> Created with the Vue.js template on codesandbox.io
 
 Try it out here:
 
@@ -21,5 +21,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
