@@ -2,6 +2,10 @@
 
 > A Vue.js project, created on codesandbox.io
 
+Try it out here:
+
+https://TheHorscht.github.io/MonitorGhostingTest
+
 ## Build Setup
 
 ``` bash
