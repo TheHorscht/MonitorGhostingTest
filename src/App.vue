@@ -1,12 +1,13 @@
 <template>
   <div id="app">
     <svg :width="svgWidth_p" height="200">
+      <rect :width="svgWidth_p" height="100" :style="{fill:bgcolor.hex}" />
       <text fill="transparent" ref="textElement">{{ text }}</text>
       <text v-for="i in fitCount_p"
            :key="'txt' + i"
            :x="x + (blockWidth_p * (i-1))"
            y="15"
-           fill="black">{{ text }}</text>
+           :fill="color.hex">{{ text }}</text>
     </svg>
 
     <div class="info">
