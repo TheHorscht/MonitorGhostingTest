@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <canvas ref="canvas"></canvas>
+    <svg :width="svgWidth_p" height="200">
+      <text fill="transparent" ref="textElement">{{ text }}</text>
+      <text v-for="i in fitCount_p"
+           :key="'txt' + i"
+           :x="x + (blockWidth_p * (i-1))"
+           y="15"
+           fill="black">{{ text }}</text>
+    </svg>
 
     <div class="info">
       <h1>Monitor Motion Blur Test</h1>
@@ -57,9 +64,6 @@
 import { Chrome as chromeColorpicker } from 'vue-color';
 import WebFont from 'webfontloader';
 
-let c;
-let w;
-let h = 100;
 let textWidth = null;
 
 const fontVariations = {
@@ -117,6 +121,9 @@ export default {
     fontSize: 20,
     fontVariation: DecodeFVD('n4'),
     text: '',
+    fitCount_p: 1,
+    blockWidth_p: 0,
+    svgWidth_p: 100,
     userInput: '',
     color: { hex: '#000' },
     bgcolor: { hex: '#FFF' },
@@ -126,12 +133,6 @@ export default {
     moving: true,
   }),
   mounted() {
-    c = this.$refs.canvas.getContext('2d');
-    w = window.innerWidth;
-    this.$refs.canvas.width = w;
-    h = parseInt(this.fontSize, 10) + 20;
-    this.$refs.canvas.height = h;
-
     WebFont.load({
       classes: false,
       google: {
@@ -154,9 +155,13 @@ export default {
       },
     });
 
-    this.recalculateTextSize();
     this.generateNewText();
-    window.requestAnimationFrame(this.draw);
+    this.svgWidth_p = window.innerWidth;
+    window.addEventListener('resize', () => {
+      this.svgWidth_p = window.innerWidth;
+      this.recalculateTextSize();
+    });
+    window.requestAnimationFrame(this.update);
   },
   watch: {
     font() {
@@ -167,8 +172,6 @@ export default {
     },
     fontSize() {
       this.recalculateTextSize();
-      h = parseInt(this.fontSize, 10) + 20;
-      this.$refs.canvas.height = h;
     },
     fontVariation() {
       this.recalculateTextSize();
@@ -180,24 +183,14 @@ export default {
     },
   },
   methods: {
-    draw() {
-      c.fillStyle = this.bgcolor.hex;
-      c.fillRect(0, 0, w, h);
-      c.fillStyle = this.color.hex;
-      c.font = this.fontStyle;
-      c.textBaseline = 'top';
-      const blockWidth = textWidth + this.textPadding;
-      const fitCount = Math.ceil(window.innerWidth / blockWidth);
-      for (let i = 0; i < fitCount + 1; i += 1) {
-        c.fillText(this.text, this.x + (i * blockWidth), 10);
-      }
+    update() {
       if (this.moving) {
         this.x += parseFloat(this.speed);
       }
-      if (this.x + blockWidth >= blockWidth) {
-        this.x -= blockWidth;
+      if (this.x >= 0) {
+        this.x -= this.blockWidth_p;
       }
-      window.requestAnimationFrame(this.draw);
+      window.requestAnimationFrame(this.update);
     },
     checkUserInput() {
       if (this.userInput === this.text) {
@@ -219,8 +212,14 @@ export default {
       this.x = -(textWidth + this.textPadding);
     },
     recalculateTextSize() {
-      c.font = this.fontStyle;
-      textWidth = c.measureText(this.text).width;
+      // textWidth = c.measureText(this.text).width;
+      this.$nextTick(() => {
+        const bounds = this.$refs.textElement.getBBox();
+        textWidth = bounds.width;
+
+        this.blockWidth_p = textWidth + this.textPadding;
+        this.fitCount_p = Math.ceil(this.svgWidth_p / this.blockWidth_p) + 1;
+      });
     },
     start() {
       this.moving = true;
@@ -230,6 +229,7 @@ export default {
     },
   },
 };
+// # sourceURL=App.vue
 </script>
 
 <style>
@@ -243,7 +243,7 @@ body {
   width: 600px;
   margin: 0 auto;
 }
-canvas {
+svg {
   position: absolute;
   top: 0px;
   left: 0;
@@ -290,5 +290,8 @@ input[type=button] {
 }
 .vc-chrome {
   display:inline-block;
+}
+svg > text {
+  user-select: none;
 }
 </style>
