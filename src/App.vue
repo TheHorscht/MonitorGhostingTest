@@ -287,11 +287,13 @@ input[type=button] {
 .config {
   width: 600px;
   margin: 0 auto;
-  margin-top: 20px;
   padding: 10px;
 }
+h2 {
+  margin: 10px 0px;
+}
 .font-config {
-  margin: 20px 0px;
+  margin: 5px 0px;
 }
 .font-config > label {
   display: grid;
