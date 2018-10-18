@@ -1,9 +1,19 @@
 <template>
   <div id="app">
-    <canvas ref="canvas"></canvas>
+    <svg :width="svgWidth_" :height="svgHeight_">
+      <rect :width="svgWidth_" height="100" :style="{fill:bgcolor.hex}" />
+      <text fill="transparent" ref="textElement" :style="textStyle">{{ text }}</text>
+      <text v-for="i in fitCount_"
+           :key="'txt' + i"
+           :x="x + (blockWidth_ * (i-1))"
+           :y="svgPaddingTop"
+           :style="textStyle"
+           :fill="color.hex"
+           alignment-baseline="hanging">{{ text }}</text>
+    </svg>
 
     <div class="info">
-      <h1>Monitor Motion Blur Test</h1>
+      <h1>Monitor Ghosting Test</h1>
       <p>
       Enter the text that see at the top correctly into the text field, then press enter.
       If it was correct, a new text will get generated and the speed increases.
@@ -25,22 +35,29 @@
       <div class="font-config">
         <label>
         Font:
-        <select v-model="font">
+        <select v-model="fontFamily">
           <option v-for="(font, key) in fonts" :key="key" :value="key">{{ key }}</option>
         </select>
         </label>
+
         <label>
         Font size:
         <input type="number" v-model="fontSize" min=8 max=72>
         </label>
+
         <label>
-        Font weight:
+        Font variation:
         <select v-model="fontVariation">
-          <option v-for="variation in fonts[font].variations"
+          <option v-for="variation in fonts[fontFamily].variations"
                   :key="variation.readable" :value="variation">
             {{ variation.readable }}
           </option>
         </select>
+        </label>
+
+        <label>
+        Letter spacing:
+        <input type="number" v-model="letterSpacing" min=-3 max=50>
         </label>
       </div>
       <div class="color-config">
@@ -57,9 +74,6 @@
 import { Chrome as chromeColorpicker } from 'vue-color';
 import WebFont from 'webfontloader';
 
-let c;
-let w;
-let h = 100;
 let textWidth = null;
 
 const fontVariations = {
@@ -86,6 +100,8 @@ function DecodeFVD(fvd) {
     return {
       readable: `${fontVariations[variant].readable} ${weight}00`,
       css: `${weight}00 ${fontVariations[variant].css}`,
+      weight: `${weight}00`,
+      style: fontVariations[variant].css,
       fvd,
     };
   }
@@ -112,26 +128,26 @@ export default {
     chromeColorpicker,
   },
   data: () => ({
-    font: 'Times New Roman',
     fonts,
-    fontSize: 20,
-    fontVariation: DecodeFVD('n4'),
+    fontFamily: 'Times New Roman',
     text: '',
+    fitCount_: 1,
+    blockWidth_: 0,
+    svgWidth_: 100,
+    svgHeight_: 100,
+    svgPaddingTop: 5,
     userInput: '',
     color: { hex: '#000' },
     bgcolor: { hex: '#FFF' },
     x: 0,
     textPadding: 40,
     speed: 2,
+    fontSize: 20,
+    letterSpacing: 0,
+    fontVariation: DecodeFVD('n4'),
     moving: true,
   }),
   mounted() {
-    c = this.$refs.canvas.getContext('2d');
-    w = window.innerWidth;
-    this.$refs.canvas.width = w;
-    h = parseInt(this.fontSize, 10) + 20;
-    this.$refs.canvas.height = h;
-
     WebFont.load({
       classes: false,
       google: {
@@ -154,50 +170,50 @@ export default {
       },
     });
 
-    this.recalculateTextSize();
     this.generateNewText();
-    window.requestAnimationFrame(this.draw);
+    this.svgWidth_ = window.innerWidth;
+    window.addEventListener('resize', () => {
+      this.svgWidth_ = window.innerWidth;
+      this.recalculateTextSize();
+    });
+    window.requestAnimationFrame(this.update);
   },
   watch: {
-    font() {
-      if (!fonts[this.font].variations.find(fv => fv.fvd === this.fontVariation.fvd)) {
-        this.fontVariation = fonts[this.font].variations[0];
+    fontFamily() {
+      // When switching fonts, if the new font doesn't have the
+      // currently selected fontVariation, use the first in the list
+      if (!fonts[this.fontFamily].variations.find(fv => fv.fvd === this.fontVariation.fvd)) {
+        this.fontVariation = fonts[this.fontFamily].variations[0];
       }
       this.recalculateTextSize();
     },
     fontSize() {
       this.recalculateTextSize();
-      h = parseInt(this.fontSize, 10) + 20;
-      this.$refs.canvas.height = h;
     },
     fontVariation() {
       this.recalculateTextSize();
     },
   },
   computed: {
-    fontStyle() {
-      return `${this.fontVariation.css} ${this.fontSize}px ${this.font}`;
+    textStyle() {
+      return {
+        fontSize: this.fontSize,
+        letterSpacing: this.letterSpacing,
+        fontFamily: this.fontFamily,
+        fontWeight: this.fontVariation.weight,
+        fontStyle: this.fontVariation.style,
+      };
     },
   },
   methods: {
-    draw() {
-      c.fillStyle = this.bgcolor.hex;
-      c.fillRect(0, 0, w, h);
-      c.fillStyle = this.color.hex;
-      c.font = this.fontStyle;
-      c.textBaseline = 'top';
-      const blockWidth = textWidth + this.textPadding;
-      const fitCount = Math.ceil(window.innerWidth / blockWidth);
-      for (let i = 0; i < fitCount + 1; i += 1) {
-        c.fillText(this.text, this.x + (i * blockWidth), 10);
-      }
+    update() {
       if (this.moving) {
         this.x += parseFloat(this.speed);
       }
-      if (this.x + blockWidth >= blockWidth) {
-        this.x -= blockWidth;
+      if (this.x >= 0) {
+        this.x -= this.blockWidth_;
       }
-      window.requestAnimationFrame(this.draw);
+      window.requestAnimationFrame(this.update);
     },
     checkUserInput() {
       if (this.userInput === this.text) {
@@ -219,8 +235,14 @@ export default {
       this.x = -(textWidth + this.textPadding);
     },
     recalculateTextSize() {
-      c.font = this.fontStyle;
-      textWidth = c.measureText(this.text).width;
+      this.$nextTick(() => {
+        const bounds = this.$refs.textElement.getBBox();
+        textWidth = bounds.width;
+        console.log("what", bounds);
+        this.svgHeight_ = bounds.height + this.svgPaddingTop;
+        this.blockWidth_ = textWidth + this.textPadding;
+        this.fitCount_ = Math.ceil(this.svgWidth_ / this.blockWidth_) + 1;
+      });
     },
     start() {
       this.moving = true;
@@ -230,6 +252,7 @@ export default {
     },
   },
 };
+// # sourceURL=App.vue
 </script>
 
 <style>
@@ -243,7 +266,7 @@ body {
   width: 600px;
   margin: 0 auto;
 }
-canvas {
+svg {
   position: absolute;
   top: 0px;
   left: 0;
@@ -264,16 +287,18 @@ input[type=button] {
 .config {
   width: 600px;
   margin: 0 auto;
-  margin-top: 20px;
   padding: 10px;
 }
+h2 {
+  margin: 10px 0px;
+}
 .font-config {
-  margin: 20px 0px;
+  margin: 5px 0px;
 }
 .font-config > label {
   display: grid;
   text-align: right;
-  grid-template-columns: 120px max-content;
+  grid-template-columns: 175px max-content;
   grid-gap: 10px;
   width: 200px;
   margin-bottom: 10px;
@@ -290,5 +315,8 @@ input[type=button] {
 }
 .vc-chrome {
   display:inline-block;
+}
+svg > text {
+  user-select: none;
 }
 </style>
