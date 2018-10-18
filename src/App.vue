@@ -59,6 +59,11 @@
         Letter spacing:
         <input type="number" v-model="letterSpacing" min=-3 max=50>
         </label>
+
+        <label>
+        Word spacing:
+        <input type="number" v-model="textPadding" min=10 max=100>
+        </label>
       </div>
       <div class="color-config">
         <span>Text color: </span>
@@ -193,6 +198,9 @@ export default {
     fontVariation() {
       this.recalculateTextSize();
     },
+    textPadding() {
+      this.blockWidth_ = textWidth + parseInt(this.textPadding);
+    },
   },
   computed: {
     textStyle() {
@@ -239,7 +247,7 @@ export default {
         const bounds = this.$refs.textElement.getBBox();
         textWidth = bounds.width;
         this.svgHeight_ = bounds.height + this.svgPaddingTop;
-        this.blockWidth_ = textWidth + this.textPadding;
+        this.blockWidth_ = textWidth + parseInt(this.textPadding);
         this.fitCount_ = Math.ceil(this.svgWidth_ / this.blockWidth_) + 1;
       });
     },
