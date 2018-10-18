@@ -13,7 +13,7 @@
     </svg>
 
     <div class="info">
-      <h1>Monitor Motion Blur Test</h1>
+      <h1>Monitor Ghosting Test</h1>
       <p>
       Enter the text that see at the top correctly into the text field, then press enter.
       If it was correct, a new text will get generated and the speed increases.
