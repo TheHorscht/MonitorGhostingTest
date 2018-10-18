@@ -238,7 +238,6 @@ export default {
       this.$nextTick(() => {
         const bounds = this.$refs.textElement.getBBox();
         textWidth = bounds.width;
-        console.log("what", bounds);
         this.svgHeight_ = bounds.height + this.svgPaddingTop;
         this.blockWidth_ = textWidth + this.textPadding;
         this.fitCount_ = Math.ceil(this.svgWidth_ / this.blockWidth_) + 1;
