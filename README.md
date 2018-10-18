@@ -6,6 +6,9 @@ Try it out here:
 
 https://TheHorscht.github.io/MonitorGhostingTest
 
+![alt text](https://TheHorscht.github.io/nervous.png "I have no idea what I'm doing")
+
+I have no idea what I'm doing.
 ## Build Setup
 
 ``` bash
