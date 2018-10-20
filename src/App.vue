@@ -10,7 +10,7 @@
     </div>
 
     <svg :width="svgWidth_" :height="svgHeight_">
-      <rect :width="svgWidth_" height="100" :style="{fill:bgcolor.hex}" />
+      <rect width="100%" height="100%" :style="{fill:bgcolor.hex}" />
       <text fill="transparent" ref="textElement" :style="textStyle">{{ text }}</text>
       <text v-for="i in fitCount_"
            :key="'txt' + i"
