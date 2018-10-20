@@ -1,17 +1,15 @@
 <template>
   <div :style="isMeasuringComplete_ ? '' : 'opacity: 0'">
-    <button :class="['title-tab', isOpen_ ? '' : 'title-tab-closed',
-                      isMeasuringComplete_ ? 'title-tab-closed-transition' : '']" @click="toggle">
+    <button :class="['title-tab',
+                      isOpen_ ? '' : 'title-tab-closed',
+                      isMeasuringComplete_ ? 'title-tab-closed-transition' : '']"
+                      @click="toggle">
       {{ title }}
       <span ref="arrow" :class="arrowClasses"></span>
     </button>
     <div :class="contentClasses">
       <slot></slot>
     </div>
-<!-- contentClasses -->
-<!-- /* ['content',
-                   isOpen_ ? 'content-open' : 'content-closed',
-                   !isMeasuringComplete_ || 'content-transition-enabled'] */ -->
   </div>
 </template>
 <script>
@@ -38,19 +36,14 @@ export default {
       height -= parseInt(paddingBottom, 10);
       element.style.setProperty('--expanded-height', `${height}px`);
     });
-    // this.$nextTick(() => {
     this.isOpen_ = this.open;
-    this.isMeasuringComplete_ = true;
-    // });
+    this.$nextTick(() => {
+      this.isMeasuringComplete_ = true;
+    });
   },
   methods: {
     toggle() {
       this.isOpen_ = !this.isOpen_;
-    },
-  },
-  watch: {
-    isOpen_() {
-      // this.$forceUpdate();
     },
   },
   computed: {
@@ -90,42 +83,42 @@ export default {
   font-size: 16px;
   cursor: pointer;
   top: 0px;
-  border: 1px solid black;
+  border: 1px solid #00000088;
   border-bottom: none;
   border-radius: 2px 2px 0 0;
   padding: 2px 5px;
 }
 .title-tab-closed {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #00000088;
   border-radius: 2px 2px 2px 2px;
 }
 .title-tab-closed-transition {
-  transition: border-bottom 0ms 3000ms linear;
+  transition: border-bottom 0ms 300ms linear;
 }
 .content {
   border-radius: 0 2px 2px 2px;
   overflow: hidden;
 }
 .content-transition-enabled {
-  transition: all 3000ms ease-in-out;
+  transition: all 300ms ease-in-out;
 }
 .content-open {
   height: var(--expanded-height);
-  padding: 40px 5px;
-  border: 1px solid black;
+  padding: 20px 5px;
+  border: 1px solid #00000088;
   box-shadow: 0px 8px 10px -5px #4848488c;
-  transition: all 3000ms ease-in-out,
-              padding 1500ms 1500ms linear,
+  transition: all 300ms ease-in-out,
+              padding 150ms 150ms linear,
               border 0ms linear;
 }
 .content-closed {
   height: 0px;
   padding: 0px 5px;
-  border: 0px solid black;
+  border: 0px solid #00000088;
   box-shadow: 0px 0px 0px 0px #4848488c;
-  transition: all 3000ms ease-in-out,
-              padding 1500ms 1500ms linear,
-              border 0ms 3000ms linear;
+  transition: all 300ms ease-in-out,
+              padding 150ms 150ms linear,
+              border 0ms 300ms linear;
 }
 .arrow-up {
   display: inline-block;
