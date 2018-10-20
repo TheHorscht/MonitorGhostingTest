@@ -32,7 +32,7 @@
       <input type="button" value="Stop" @click="stop" v-show="moving">
     </div>
 
-    <toggle-box title="Config" :open="false">
+    <toggle-box title="Customize" :open="false">
       <div class="font-config">
         <label>
         Font:
