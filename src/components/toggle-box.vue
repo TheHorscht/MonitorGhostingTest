@@ -114,7 +114,7 @@ export default {
 .content-closed {
   height: 0px;
   padding: 0px 5px;
-  border: 0px solid #00000088;
+  border: 1px solid transparent;
   box-shadow: 0px 0px 0px 0px #4848488c;
   transition: all 300ms ease-in-out,
               padding 150ms 150ms linear,
