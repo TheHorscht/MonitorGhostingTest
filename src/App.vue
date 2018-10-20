@@ -26,7 +26,7 @@
       if($event.key === 'Enter') {
         checkUserInput()
       }">
-      <label>Current speed: <input type="number" v-model="speed" min=1 max=100></label>
+      <label>Current speed: <input type="number" v-model="speed" min=1 max=100 step=0.25></label>
       <input type="button" value="Start" @click="start" v-show="!moving">
       <input type="button" value="Stop" @click="stop" v-show="moving">
     </div>
