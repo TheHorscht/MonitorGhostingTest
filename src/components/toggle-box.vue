@@ -114,14 +114,18 @@ export default {
   padding: 40px 5px;
   border: 1px solid black;
   box-shadow: 0px 8px 10px -5px #4848488c;
-  transition: all 3000ms ease-in-out, border 0ms linear;
+  transition: all 3000ms ease-in-out,
+              padding 1500ms 1500ms linear,
+              border 0ms linear;
 }
 .content-closed {
   height: 0px;
   padding: 0px 5px;
   border: 0px solid black;
   box-shadow: 0px 0px 0px 0px #4848488c;
-  transition: all 3000ms ease-in-out, border 0ms 3000ms linear;
+  transition: all 3000ms ease-in-out,
+              padding 1500ms 1500ms linear,
+              border 0ms 3000ms linear;
 }
 .arrow-up {
   display: inline-block;
