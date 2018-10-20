@@ -199,7 +199,7 @@ export default {
       this.recalculateTextSize();
     },
     textPadding() {
-      this.blockWidth_ = textWidth + parseInt(this.textPadding);
+      this.blockWidth_ = textWidth + parseInt(this.textPadding, 10);
     },
   },
   computed: {
@@ -247,7 +247,7 @@ export default {
         const bounds = this.$refs.textElement.getBBox();
         textWidth = bounds.width;
         this.svgHeight_ = bounds.height + this.svgPaddingTop;
-        this.blockWidth_ = textWidth + parseInt(this.textPadding);
+        this.blockWidth_ = textWidth + parseInt(this.textPadding, 10);
         this.fitCount_ = Math.ceil(this.svgWidth_ / this.blockWidth_) + 1;
       });
     },

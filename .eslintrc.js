@@ -41,6 +41,7 @@ module.exports = {
       ]
     }],
     'no-underscore-dangle': 'off',
+    'linebreak-style': 'off',
     // allow optionalDependencies
     'import/no-extraneous-dependencies': ['error', {
       optionalDependencies: ['test/unit/index.js']
