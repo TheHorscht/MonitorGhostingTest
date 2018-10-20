@@ -1,13 +1,11 @@
 <template>
   <div id="app">
-    <div class="info">
-      <h1>Monitor Ghosting Test</h1>
-      <p>
-      Enter the text that's moving across the screen correctly into the text field,
-      then press enter. If it was correct, a new text will be generated and the speed
-      increases. See how far you can make it before the text becomes too blurry to read.
-      </p>
-    </div>
+    <h1>Monitor Ghosting Test</h1>
+    <p>
+    Enter the text that's moving across the screen correctly into the text field,
+    then press enter. If it was correct, a new text will be generated and the speed
+    increases. See how far you can make it before the text becomes too blurry to read.
+    </p>
 
     <svg :width="svgWidth_" :height="svgHeight_">
       <rect width="100%" height="100%" :style="{fill:bgcolor.hex}" />
@@ -271,13 +269,12 @@ body {
   margin: 0px;
   padding: 0px;
 }
-svg {
-  position: absolute;
-  left: 0;
-}
 #app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-family: "Verdana";
-  width: 600px;
+  width: 800px;
   margin: 0 auto;
 }
 input[type=button] {
@@ -288,7 +285,7 @@ input[type=button] {
   display: grid;
   width: 300px;
   grid-gap: 10px;
-  margin: 0 auto;
+  margin: 20px 0px;
 }
 .controls > p {
   margin: 0px;
@@ -316,7 +313,7 @@ h2 {
   display: grid;
   grid-template-columns: 250px 250px;
   grid-gap: 10px;
-  justify-content: center;
+  justify-items: center;
 }
 .info {
   width: 600px;
