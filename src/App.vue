@@ -1,5 +1,14 @@
 <template>
   <div id="app">
+    <div class="info">
+      <h1>Monitor Ghosting Test</h1>
+      <p>
+      Enter the text that's moving across the screen correctly into the text field, then press enter.
+      If it was correct, a new text will be generated and the speed increases.
+      See how far you can make it before the text becomes too blurry to read.
+      </p>
+    </div>
+
     <svg :width="svgWidth_" :height="svgHeight_">
       <rect :width="svgWidth_" height="100" :style="{fill:bgcolor.hex}" />
       <text fill="transparent" ref="textElement" :style="textStyle">{{ text }}</text>
@@ -12,14 +21,6 @@
            alignment-baseline="hanging">{{ text }}</text>
     </svg>
 
-    <div class="info">
-      <h1>Monitor Ghosting Test</h1>
-      <p>
-      Enter the text that see at the top correctly into the text field, then press enter.
-      If it was correct, a new text will get generated and the speed increases.
-      See how far you can make it before the text becomes too blurry to make out.
-      </p>
-    </div>
     <div class="controls">
       <p>Repeat the above text here:</p>
       <input type="text" v-model="userInput" id="userInput" @keyup="
@@ -30,7 +31,9 @@
       <input type="button" value="Start" @click="start" v-show="!moving">
       <input type="button" value="Stop" @click="stop" v-show="moving">
     </div>
+
     <h2>Config</h2>
+
     <div class="config">
       <div class="font-config">
         <label>
@@ -65,6 +68,7 @@
         <input type="number" v-model="textPadding" min=10 max=100>
         </label>
       </div>
+
       <div class="color-config">
         <span>Text color: </span>
         <span>Background color: </span>
@@ -265,18 +269,16 @@ export default {
 <style>
 body {
   margin: 0px;
-  margin-top: 120px;
   padding: 0px;
+}
+svg {
+  position: absolute;
+  left: 0;
 }
 #app {
   font-family: "Verdana";
   width: 600px;
   margin: 0 auto;
-}
-svg {
-  position: absolute;
-  top: 0px;
-  left: 0;
 }
 input[type=button] {
   margin-right: 5px;
