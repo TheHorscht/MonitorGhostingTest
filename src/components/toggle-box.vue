@@ -1,6 +1,7 @@
 <template>
   <div :style="isMeasuringComplete_ ? '' : 'opacity: 0'">
-    <button :class="['title-tab', isOpen_ ? '' : 'title-tab-closed']" @click="toggle">
+    <button :class="['title-tab', isOpen_ ? '' : 'title-tab-closed',
+                      isMeasuringComplete_ ? 'title-tab-closed-transition' : '']" @click="toggle">
       {{ title }}
       <span ref="arrow" :class="arrowClasses"></span>
     </button>
@@ -97,6 +98,8 @@ export default {
 .title-tab-closed {
   border-bottom: 1px solid black;
   border-radius: 2px 2px 2px 2px;
+}
+.title-tab-closed-transition {
   transition: border-bottom 0ms 3000ms linear;
 }
 .content {
