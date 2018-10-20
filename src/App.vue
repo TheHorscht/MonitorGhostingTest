@@ -3,9 +3,9 @@
     <div class="info">
       <h1>Monitor Ghosting Test</h1>
       <p>
-      Enter the text that's moving across the screen correctly into the text field, then press enter.
-      If it was correct, a new text will be generated and the speed increases.
-      See how far you can make it before the text becomes too blurry to read.
+      Enter the text that's moving across the screen correctly into the text field,
+      then press enter. If it was correct, a new text will be generated and the speed
+      increases. See how far you can make it before the text becomes too blurry to read.
       </p>
     </div>
 
@@ -32,9 +32,7 @@
       <input type="button" value="Stop" @click="stop" v-show="moving">
     </div>
 
-    <h2>Config</h2>
-
-    <div class="config">
+    <toggle-box title="Config" :open="false">
       <div class="font-config">
         <label>
         Font:
@@ -75,13 +73,14 @@
         <chrome-colorpicker v-model="color" :disable-alpha=true></chrome-colorpicker>
         <chrome-colorpicker v-model="bgcolor" :disable-alpha=true></chrome-colorpicker>
       </div>
-    </div>
+    </toggle-box>
   </div>
 </template>
 
 <script>
 import { Chrome as chromeColorpicker } from 'vue-color';
 import WebFont from 'webfontloader';
+import ToggleBox from './components/toggle-box';
 
 let textWidth = null;
 
@@ -135,6 +134,7 @@ export default {
   name: 'App',
   components: {
     chromeColorpicker,
+    ToggleBox,
   },
   data: () => ({
     fonts,
