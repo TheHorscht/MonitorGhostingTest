@@ -179,7 +179,7 @@ export default {
       },
     });
 
-    this.generateNewText();
+    this.generateNewText(15);
     this.svgWidth_ = window.innerWidth;
     window.addEventListener('resize', () => {
       this.svgWidth_ = window.innerWidth;
@@ -234,12 +234,12 @@ export default {
     },
     nextLevel() {
       this.speed += 2;
-      this.generateNewText();
+      this.generateNewText(15);
       this.userInput = '';
     },
-    generateNewText() {
+    generateNewText(length) {
       const characters = 'abcdefghijklmnopqrstuvwxyz';
-      const text = Array(20).fill(0)
+      const text = Array(length).fill(0)
         .map(() => characters[Math.floor(Math.random() * characters.length)])
         .join('');
       this.text = text;
