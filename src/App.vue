@@ -233,7 +233,7 @@ export default {
       }
     },
     nextLevel() {
-      this.speed += 2;
+      this.speed += 1;
       this.generateNewText(15);
       this.userInput = '';
     },
