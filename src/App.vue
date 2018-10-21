@@ -46,12 +46,20 @@
 
         <label>
         Font variation:
-        <select v-model="fontVariation">
-          <option v-for="variation in fonts[fontFamily].variations"
-                  :key="variation.readable" :value="variation">
-            {{ variation.readable }}
-          </option>
-        </select>
+        <div class="radiogroup">
+          <template v-for="variation in fonts[fontFamily].variations">
+            <input type="radio"
+                  name="fv-radios"
+                  :id="variation.readable"
+                  v-model="fontVariation"
+                  :key="variation.readable + 'radio'"
+                  :value="variation">
+            <label :for="variation.readable"
+                  :key="variation.readable + 'label'">
+              {{ variation.readable }}
+            </label>
+          </template>
+        </div>
         </label>
 
         <label>
@@ -280,6 +288,36 @@ body {
 input[type=button] {
   margin-right: 5px;
   padding: 5px 10px;
+}
+input[type=radio] {
+  display: none;
+}
+input[type=radio] + label {
+  font-size: 14px;
+  user-select: none;
+  padding: 5px;
+  background: #eaeaea;;
+  box-shadow: inset -1px -1px 1px 0px #292929b5, 1px 1px 1px -1px #292929b5;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+.radiogroup input[type=radio] + label:first-of-type {
+  border-left: 1px solid black;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.radiogroup input[type=radio] + label:last-of-type {
+  border-right: 1px solid black;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+input[type=radio]:checked + label {
+  background: #cacaca;
+  padding-top: 7px;
+  padding-bottom: 3px;
+  position: relative;
+  top: 2px;
+  box-shadow: inset 0px 1px 1px 1px #292929b5, 1px 1px 1px -1px #292929b5;
 }
 .controls {
   display: grid;
