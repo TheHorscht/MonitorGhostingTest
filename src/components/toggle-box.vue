@@ -25,6 +25,7 @@ export default {
   data: () => ({
     isOpen_: true,
     isMeasuringComplete_: false,
+    transitionEnabled_: false,
   }),
   mounted() {
     const els = document.querySelectorAll('.content');
@@ -39,6 +40,9 @@ export default {
     this.isOpen_ = this.open;
     this.$nextTick(() => {
       this.isMeasuringComplete_ = true;
+      window.setTimeout(() => {
+        this.transitionEnabled_ = true;
+      }, 100);
     });
   },
   methods: {
@@ -63,12 +67,16 @@ export default {
     contentClasses() {
       const classes = ['content'];
       if (this.isMeasuringComplete_) {
-        if (!this.isOpen_) {
-          classes.push('content-closed');
-        } else {
+        if (this.isOpen_) {
           classes.push('content-open');
+        } else {
+          classes.push('content-closed');
         }
-        classes.push('content-transition-enabled');
+      } else {
+        classes.push('content-open');
+      }
+      if (!this.transitionEnabled_) {
+        classes.push('content-transition-disabled');
       }
       return classes;
     },
@@ -99,8 +107,8 @@ export default {
   border-radius: 0 2px 2px 2px;
   overflow: hidden;
 }
-.content-transition-enabled {
-  transition: all 300ms ease-in-out;
+.content-transition-disabled {
+  transition: none !important;
 }
 .content-open {
   height: var(--expanded-height);
