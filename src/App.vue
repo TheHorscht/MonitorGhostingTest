@@ -226,7 +226,7 @@ export default {
   methods: {
     update() {
       if (this.moving) {
-        this.x += parseFloat(this.speed);
+        this.x += parseFloat(this.speed) || 0;
       }
       if (this.x >= 0) {
         this.x -= this.blockWidth_;
