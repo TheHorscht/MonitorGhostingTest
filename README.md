@@ -1,14 +1,13 @@
 # Monitor Ghosting Test
 
-> Created with the Vue.js template on codesandbox.io
+WebApp for visualizing motion blur (ghosting) on desktop computer monitors, which makes text hard to read because the letters bleed into each other, especially when similar letters are next to each other, like li, mn, wv, ft, etc.
+
+![alt text](https://TheHorscht.github.io/ghosting.jpg "I have no idea what I'm doing")
 
 Try it out here:
 
 https://TheHorscht.github.io/MonitorGhostingTest
 
-![alt text](https://TheHorscht.github.io/nervous.png "I have no idea what I'm doing")
-
-I have no idea what I'm doing.
 ## Build Setup
 
 ``` bash
@@ -20,7 +19,4 @@ npm run dev
 
 # build for production with minification
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
